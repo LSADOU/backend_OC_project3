@@ -31,7 +31,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain publicFilterChain(HttpSecurity http) throws Exception {
         http
-            .securityMatcher("api/auth/login", "api/auth/register", "/uploads/**")
+            .securityMatcher("api/auth/login", "api/auth/register", "/uploads/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()

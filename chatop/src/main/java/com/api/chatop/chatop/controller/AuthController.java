@@ -20,9 +20,14 @@ import com.api.chatop.chatop.model.Users;
 import com.api.chatop.chatop.security.service.JWTService;
 import com.api.chatop.chatop.service.UsersService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
+@Tag(name = "Authentication", description = "Endpoints d'authentification")
 public class AuthController {
 
     private final UsersService usersService;
@@ -37,6 +42,11 @@ public class AuthController {
         this.userMapper = userMapper;
     }
 
+    @Operation(summary = "Inscription", description = "Crée un nouvel utilisateur et retourne un token JWT")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Inscription réussie"),
+        @ApiResponse(responseCode = "400", description = "Email déjà utilisé")
+    })
     @PostMapping("api/auth/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDTO requestDTO) {
         if (this.usersService.existsByEmail(requestDTO.getEmail())) {
@@ -52,6 +62,11 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 
+    @Operation(summary = "Connexion", description = "Authentifie un utilisateur et retourne un token JWT")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Connexion réussie"),
+        @ApiResponse(responseCode = "401", description = "Identifiants invalides")
+    })
     @PostMapping("api/auth/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO requestDTO) {
         Users existingUser = this.usersService.getUserByEmail(requestDTO.getEmail())
@@ -65,6 +80,11 @@ public class AuthController {
         }
     }
 
+    @Operation(summary = "Utilisateur courant", description = "Retourne les informations de l'utilisateur connecté")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Utilisateur trouvé"),
+        @ApiResponse(responseCode = "401", description = "Non authentifié")
+    })
     @GetMapping("api/auth/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
         if (authentication == null) {
