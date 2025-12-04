@@ -60,7 +60,7 @@ public class RentalsController {
         @ApiResponse(responseCode = "200", description = "Location créée"),
         @ApiResponse(responseCode = "401", description = "Non authentifié")
     })
-    @PostMapping(value = "api/rentals", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/api/rentals", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<RentalResponseDTO> createRentals(@Valid @ModelAttribute CreateRentalRequestDTO requestDTO,
                                                            @AuthenticationPrincipal Jwt jwt) {
         
@@ -83,7 +83,7 @@ public class RentalsController {
         @ApiResponse(responseCode = "200", description = "Location trouvée"),
         @ApiResponse(responseCode = "404", description = "Location non trouvée")
     })
-    @GetMapping("api/rental/{id}")
+    @GetMapping("/api/rentals/{id}")
     public ResponseEntity<RentalResponseDTO> getRental(@PathVariable("id") final Long id) {
         Rentals rental = rentalsService.getRentalById(id)
                 .orElseThrow(() -> new RuntimeException("Rental not found"));
@@ -94,7 +94,7 @@ public class RentalsController {
 
     @Operation(summary = "Lister les locations", description = "Retourne toutes les locations")
     @ApiResponse(responseCode = "200", description = "Liste des locations")
-    @GetMapping("api/rentals")
+    @GetMapping("/api/rentals")
     public ResponseEntity<AllRentalResponseDTO> getRentals() {
         Iterable<Rentals> rentals = rentalsService.getAllRentals();
 
@@ -110,7 +110,7 @@ public class RentalsController {
         @ApiResponse(responseCode = "200", description = "Location modifiée"),
         @ApiResponse(responseCode = "404", description = "Location non trouvée")
     })
-    @PutMapping("api/rental/{id}")
+    @PutMapping("/api/rentals/{id}")
     public ResponseEntity<RentalResponseDTO> updateRental(@PathVariable final Long id,
                                                           @Valid @RequestBody UpdateRentalRequestDTO requestDTO) {
         Rentals existingRental = rentalsService.getRentalById(id)
@@ -144,7 +144,7 @@ public class RentalsController {
         @ApiResponse(responseCode = "204", description = "Location supprimée"),
         @ApiResponse(responseCode = "404", description = "Location non trouvée")
     })
-    @DeleteMapping("api/rental/{id}")
+    @DeleteMapping("api/rentals/{id}")
     public ResponseEntity<Void> deleteRental(@PathVariable("id") final Long id) {
         rentalsService.deleteRental(id);
         return ResponseEntity.noContent().build();

@@ -43,7 +43,7 @@ public class MessagesController {
         @ApiResponse(responseCode = "200", description = "Message créé"),
         @ApiResponse(responseCode = "400", description = "Données invalides")
     })
-    @PostMapping("api/messages")
+    @PostMapping("/api/messages")
     public ResponseEntity<MessageResponseDTO> createMessage(@Valid @RequestBody CreateMessageRequestDTO requestDTO) {
         Messages message = messageMapper.toEntity(requestDTO);
         message.setCreated_at(LocalDateTime.now());
@@ -59,7 +59,7 @@ public class MessagesController {
         @ApiResponse(responseCode = "200", description = "Message trouvé"),
         @ApiResponse(responseCode = "404", description = "Message non trouvé")
     })
-    @GetMapping("api/messages/{id}")
+    @GetMapping("/api/messages/{id}")
     public ResponseEntity<MessageResponseDTO> getMessage(@PathVariable final Long id) {
         Messages message = messagesService.getMessageById(id)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
@@ -70,7 +70,7 @@ public class MessagesController {
 
     @Operation(summary = "Lister les messages", description = "Retourne tous les messages")
     @ApiResponse(responseCode = "200", description = "Liste des messages")
-    @GetMapping("api/messages")
+    @GetMapping("/api/messages")
     public ResponseEntity<List<MessageResponseDTO>> getMessages() {
         Iterable<Messages> messages = messagesService.getAllMessages();
 
@@ -86,7 +86,7 @@ public class MessagesController {
         @ApiResponse(responseCode = "200", description = "Message modifié"),
         @ApiResponse(responseCode = "404", description = "Message non trouvé")
     })
-    @PutMapping("api/messages/{id}")
+    @PutMapping("/api/messages/{id}")
     public ResponseEntity<MessageResponseDTO> updateMessage(@PathVariable final Long id,
                                                             @Valid @RequestBody CreateMessageRequestDTO requestDTO) {
         Messages existingMessage = messagesService.getMessageById(id)
@@ -108,7 +108,7 @@ public class MessagesController {
         @ApiResponse(responseCode = "204", description = "Message supprimé"),
         @ApiResponse(responseCode = "404", description = "Message non trouvé")
     })
-    @DeleteMapping("api/messages/{id}")
+    @DeleteMapping("/api/messages/{id}")
     public ResponseEntity<Void> deleteMessage(@PathVariable final Long id) {
         messagesService.deleteMessage(id);
         return ResponseEntity.noContent().build();

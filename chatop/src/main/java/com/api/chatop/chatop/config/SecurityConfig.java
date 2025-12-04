@@ -17,6 +17,7 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -25,13 +26,14 @@ import org.springframework.core.annotation.Order;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final String jwtKey = "MP7MHZa5d21uYBLJa8eLa9Tp7kCQdXoShAvt370vd0i";
+    @Value("${jwt.secret}")
+    private String jwtKey;
 
     @Bean
     @Order(1)
     public SecurityFilterChain publicFilterChain(HttpSecurity http) throws Exception {
         http
-            .securityMatcher("api/auth/login", "api/auth/register", "/uploads/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
+            .securityMatcher("/api/auth/login", "/api/auth/register", "/uploads/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()
