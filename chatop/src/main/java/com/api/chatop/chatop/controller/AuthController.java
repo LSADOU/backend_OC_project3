@@ -47,7 +47,7 @@ public class AuthController {
         @ApiResponse(responseCode = "200", description = "Inscription réussie"),
         @ApiResponse(responseCode = "400", description = "Email déjà utilisé")
     })
-    @PostMapping("api/auth/register")
+    @PostMapping("/api/auth/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDTO requestDTO) {
         if (this.usersService.existsByEmail(requestDTO.getEmail())) {
             return ResponseEntity.badRequest().body(Map.of("error", "Email already in use"));
@@ -67,7 +67,7 @@ public class AuthController {
         @ApiResponse(responseCode = "200", description = "Connexion réussie"),
         @ApiResponse(responseCode = "401", description = "Identifiants invalides")
     })
-    @PostMapping("api/auth/login")
+    @PostMapping("/api/auth/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO requestDTO) {
         Users existingUser = this.usersService.getUserByEmail(requestDTO.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("email not found"));
@@ -85,7 +85,7 @@ public class AuthController {
         @ApiResponse(responseCode = "200", description = "Utilisateur trouvé"),
         @ApiResponse(responseCode = "401", description = "Non authentifié")
     })
-    @GetMapping("api/auth/me")
+    @GetMapping("/api/auth/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
         if (authentication == null) {
             return ResponseEntity.status(401).body("Unauthorized");

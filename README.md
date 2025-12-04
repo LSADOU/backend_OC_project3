@@ -43,47 +43,61 @@ CREATE DATABASE rental_db;
 mysql -u votre_utilisateur -p rental_db < script.sql
 ```
 
-### 3. Configurer l'application
+### 3. Configurer les variables d'environnement
 
 1. Copiez le fichier d'exemple de configuration :
 
 ```bash
-cp src/main/resources/application.properties.example src/main/resources/application.properties
+cp .env.example .env
 ```
 
-2. Éditez le fichier `application.properties` avec vos paramètres :
+2. Éditez le fichier `.env` avec vos paramètres :
 
 ```properties
-# Connexion à la base de données
-spring.datasource.url=jdbc:mysql://localhost:3306/rental_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-spring.datasource.username=VOTRE_NOM_UTILISATEUR
-spring.datasource.password=VOTRE_MOT_DE_PASSE
+# Base de données MySQL
+DB_URL=jdbc:mysql://localhost:3306/rental_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+DB_USERNAME=votre_nom_utilisateur
+DB_PASSWORD=votre_mot_de_passe
+
+# Clé secrète JWT (minimum 32 caractères, générée aléatoirement)
+JWT_SECRET=votre_cle_secrete_jwt_minimum_32_caracteres
+
+# URL de base de l'application
+APP_BASE_URL=http://localhost:3001
 ```
 
-### 4. Configurer la clé de sécurité JWT (Important)
+**Important concernant la clé JWT :**
+- La clé doit être une chaîne de caractères aléatoire d'au moins 32 caractères
+- Utilisez un générateur de clés sécurisé pour la production
+- Ne partagez jamais cette clé
 
-La clé secrète utilisée pour signer les tokens JWT est actuellement définie en dur dans le code source :
-
-**Fichier :** `src/main/java/com/api/chatop/chatop/config/SecurityConfig.java`
-
-```java
-private final String jwtKey = "MP7MHZa5d21uYBLJa8eLa9Tp7kCQdXoShAvt370vd0i";
-```
-
-**Il est fortement recommandé de remplacer cette clé par votre propre clé secrète**, surtout en environnement de production. La clé doit être :
-- Une chaîne de caractères aléatoire
-- D'au moins 32 caractères
-- Gardée secrète et non versionnée dans Git
-
-### 5. Compiler et lancer l'application
+### 4. Compiler et lancer l'application
 
 ```bash
 # Compiler le projet
 mvn clean install
 
-# Lancer l'application
+# Lancer l'application avec les variables d'environnement
+# Sur Windows (PowerShell) :
+$env:DB_URL="jdbc:mysql://localhost:3306/rental_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+$env:DB_USERNAME="votre_utilisateur"
+$env:DB_PASSWORD="votre_mot_de_passe"
+$env:JWT_SECRET="votre_cle_secrete_jwt"
+$env:APP_BASE_URL="http://localhost:3001"
+mvn spring-boot:run
+
+# Sur Linux/Mac :
+export DB_URL="jdbc:mysql://localhost:3306/rental_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true"
+export DB_USERNAME="votre_utilisateur"
+export DB_PASSWORD="votre_mot_de_passe"
+export JWT_SECRET="votre_cle_secrete_jwt"
+export APP_BASE_URL="http://localhost:3001"
 mvn spring-boot:run
 ```
+
+**Alternative avec un fichier .env (recommandé) :**
+
+Vous pouvez utiliser un outil comme [dotenv-cli](https://www.npmjs.com/package/dotenv-cli) ou configurer votre IDE pour charger automatiquement le fichier `.env`.
 
 L'API sera accessible sur : `http://localhost:3001`
 
