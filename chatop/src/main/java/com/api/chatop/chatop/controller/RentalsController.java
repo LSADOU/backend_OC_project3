@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.chatop.chatop.dto.request.CreateRentalRequestDTO;
@@ -66,6 +65,7 @@ public class RentalsController {
         
         Rentals rental = rentalMapper.toEntity(requestDTO);
         rental.setCreated_at(LocalDateTime.now());
+        rental.setUpdated_at(LocalDateTime.now());
         String email = jwt.getSubject();
         Users user = usersService.getUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -110,9 +110,9 @@ public class RentalsController {
         @ApiResponse(responseCode = "200", description = "Location modifiée"),
         @ApiResponse(responseCode = "404", description = "Location non trouvée")
     })
-    @PutMapping("/api/rentals/{id}")
+    @PutMapping(value = "/api/rentals/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<RentalResponseDTO> updateRental(@PathVariable final Long id,
-                                                          @Valid @RequestBody UpdateRentalRequestDTO requestDTO) {
+                                                          @Valid @ModelAttribute UpdateRentalRequestDTO requestDTO) {
         Rentals existingRental = rentalsService.getRentalById(id)
                 .orElseThrow(() -> new RuntimeException("Rental not found"));
 
@@ -124,9 +124,6 @@ public class RentalsController {
         }
         if (requestDTO.getPrice() != null) {
             existingRental.setPrice(requestDTO.getPrice());
-        }
-        if (requestDTO.getPicture() != null) {
-            existingRental.setPicture(requestDTO.getPicture());
         }
         if (requestDTO.getDescription() != null) {
             existingRental.setDescription(requestDTO.getDescription());
