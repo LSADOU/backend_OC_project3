@@ -13,7 +13,5 @@ public class UpdateRentalRequestDTO {
     @Min(value = 0, message = "Price must be positive")
     private Integer price;
     
-    private String picture;
-    
     private String description;
 }

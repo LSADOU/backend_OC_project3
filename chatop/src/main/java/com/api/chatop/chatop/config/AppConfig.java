@@ -15,13 +15,13 @@ public class AppConfig {
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
 
         Resource[] resources = new Resource[] {
-            new ClassPathResource(".env"),           // Dans src/main/resources
-            new FileSystemResource(".env"),          // À la racine du projet
-            new FileSystemResource("chatop/.env")    // Si lancé depuis le parent
+            new ClassPathResource(".env"),
+            new FileSystemResource(".env"),
+            new FileSystemResource("chatop/.env")
         };
 
         configurer.setLocations(resources);
-        configurer.setIgnoreResourceNotFound(true);  // Ne pas échouer si un fichier n'existe pas
+        configurer.setIgnoreResourceNotFound(true);
 
         return configurer;
     }
